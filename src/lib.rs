@@ -2,6 +2,7 @@ use std::env;
 use std::fs::File;
 use std::io::prelude::*;
 use std::io::BufReader;
+use std::time::Instant;
 
 // [f0, f1] それぞれ &str -> () を受け取って日に応じて実行する
 pub fn run(parts: &[fn(&str); 2]) {
@@ -29,4 +30,10 @@ pub fn run(parts: &[fn(&str); 2]) {
     let mut input: String = String::new();
     reader.read_to_string(&mut input).unwrap();
     parts[part](&input);
+}
+
+pub fn run_and_report_time(parts: &[fn(&str); 2]) {
+    let start = Instant::now();
+    run(parts);
+    println!("Elapsed time: {:?}", start.elapsed());
 }

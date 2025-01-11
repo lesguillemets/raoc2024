@@ -1,4 +1,4 @@
-use raoc2024::run;
+use raoc2024::run_and_report_time;
 use std::cmp::Ordering;
 
 struct Report {
@@ -52,5 +52,5 @@ fn part2(s: &str) {
 }
 
 fn main() {
-    run(&[part1, part2]);
+    run_and_report_time(&[part1, part2]);
 }
