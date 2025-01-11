@@ -29,7 +29,25 @@ fn part1(s: &str) {
 }
 
 fn part2(s: &str) {
-    println!("part 2");
+    let safety: Vec<bool> = s
+        .lines()
+        .map(Report::from_line)
+        .map(|r| r.is_safe())
+        .collect();
+    let mut count = 0;
+    let mut current_streak: u32 = 0;
+    for &safe in &safety {
+        if safe {
+            if current_streak > 1 {
+                count += current_streak;
+            }
+            current_streak = 0;
+        } else {
+            current_streak += 1;
+        }
+    }
+    let ans = safety.len() as u32 - count;
+    println!("{ans}");
 }
 
 fn main() {
