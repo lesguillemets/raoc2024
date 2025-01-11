@@ -18,7 +18,13 @@ pub fn run(parts: &[fn(&str); 2]) {
     } else {
         part = 0;
     }
-    let f = File::open(format!("./input/{day}.txt")).unwrap();
+    let input_filename: String;
+    if let Some(true) = args.get(2).map(|a| a == "ex") {
+        input_filename = format!("./input/ex_{day}.txt");
+    } else {
+        input_filename = format!("./input/{day}.txt");
+    }
+    let f = File::open(input_filename).unwrap();
     let mut reader = BufReader::new(f);
     let mut input: String = String::new();
     reader.read_to_string(&mut input).unwrap();
