@@ -21,6 +21,24 @@ impl Report {
         }
         true
     }
+    fn is_safe_tor(&self) -> bool {
+        let mut unsafe_count = 0;
+        for (&xi, &xj) in self.dat.iter().zip(self.dat.iter().skip(1)) {
+            let diff = xi.abs_diff(xj);
+            if diff > 3 || diff == 0 {
+                unsafe_count += 1;
+                if unsafe_count >= 2 {
+                    return false;
+                }
+            }
+        }
+        let (asc, desc): (Vec<_>, Vec<_>) = self
+            .dat
+            .iter()
+            .zip(self.dat.iter().skip(1))
+            .partition(|(xi, xj)| xi < xj);
+        asc.len() <= 1 || desc.len() <= 1
+    }
 }
 
 fn part1(s: &str) {
@@ -29,25 +47,8 @@ fn part1(s: &str) {
 }
 
 fn part2(s: &str) {
-    let safety: Vec<bool> = s
-        .lines()
-        .map(Report::from_line)
-        .map(|r| r.is_safe())
-        .collect();
-    let mut count = 0;
-    let mut current_streak: u32 = 0;
-    for &safe in &safety {
-        if safe {
-            if current_streak > 1 {
-                count += current_streak;
-            }
-            current_streak = 0;
-        } else {
-            current_streak += 1;
-        }
-    }
-    let ans = safety.len() as u32 - count;
-    println!("{ans}");
+    let reports: Vec<Report> = s.lines().map(Report::from_line).collect();
+    println!("{}", reports.iter().filter(|r| r.is_safe_tor()).count());
 }
 
 fn main() {
