@@ -1,4 +1,5 @@
 use raoc2024::run;
+use std::collections::HashMap;
 
 fn to_list(s: &str) -> (Vec<u32>, Vec<u32>) {
     let mut first: Vec<u32> = vec![];
@@ -24,7 +25,18 @@ fn part1(s: &str) {
 }
 
 fn part2(s: &str) {
-    println!("part 2");
+    let (ns0, ns1) = to_list(s);
+    let mut counter: HashMap<u32, u32> = HashMap::new();
+    for n1 in &ns1 {
+        counter.entry(*n1).and_modify(|c| *c += 1).or_insert(1);
+    }
+    let mut score = 0;
+    for n0 in &ns0 {
+        if let Some(c) = counter.get(n0) {
+            score += n0 * c;
+        }
+    }
+    println!("{score}");
 }
 
 fn main() {
