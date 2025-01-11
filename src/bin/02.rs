@@ -22,22 +22,22 @@ impl Report {
         true
     }
     fn is_safe_tor(&self) -> bool {
-        let mut unsafe_count = 0;
-        for (&xi, &xj) in self.dat.iter().zip(self.dat.iter().skip(1)) {
-            let diff = xi.abs_diff(xj);
-            if diff > 3 || diff == 0 {
-                unsafe_count += 1;
-                if unsafe_count >= 2 {
-                    return false;
-                }
+        if self.is_safe() {
+            return true;
+        }
+        for i in 0..self.dat.len() {
+            let skipped: Vec<u32> = self
+                .dat
+                .iter()
+                .take(i)
+                .chain(self.dat.iter().skip(i + 1))
+                .copied()
+                .collect();
+            if (Report { dat: skipped }).is_safe() {
+                return true;
             }
         }
-        let (asc, desc): (Vec<_>, Vec<_>) = self
-            .dat
-            .iter()
-            .zip(self.dat.iter().skip(1))
-            .partition(|(xi, xj)| xi < xj);
-        asc.len() <= 1 || desc.len() <= 1
+        false
     }
 }
 
