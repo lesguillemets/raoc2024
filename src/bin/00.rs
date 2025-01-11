@@ -1,4 +1,4 @@
-use raoc2025::run;
+use raoc2024::run;
 
 fn part1(s: &str) {
     println!("part 1");
