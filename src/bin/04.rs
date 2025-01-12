@@ -1,6 +1,7 @@
 use raoc2024::run;
 
 type XMAS = u8;
+const DEBUG: bool = true;
 
 const DIRS: [(i32, i32); 8] = [
     (1, 0),
@@ -47,6 +48,10 @@ fn check_dir(dat: &[Vec<XMAS>], &(i, j): &(usize, usize), &dir: &(i32, i32)) -> 
         {
             if n as i32 != dist {
                 return false;
+            } else if DEBUG {
+                let ni = add_dir(i, dir.0 * dist);
+                let nj = add_dir(j, dir.1 * dist);
+                eprintln!("oK: ({i},{j}): {dist} for {dir:?}, at {n}@({ni},{nj})");
             }
         } else {
             return false;
