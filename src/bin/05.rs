@@ -59,9 +59,13 @@ fn part2(s: &str) {
     let mut lines = s.lines();
     let rules = load_rules(&mut lines);
     let sources: Vec<Vec<u32>> = lines
-        .map(|l| l.split(",").map(|n| n.parse().unwrap()).collect())
+        .map(|l| {
+            l.split(",")
+                .map(|n| n.parse().unwrap())
+                .collect::<Vec<u32>>() // 何故かここに型入れるとコンパイルが通る
+        })
+        .filter(|pages| !is_valid(&rules, pages))
         .collect();
-    // .filter(|pages| !is_valid(&rules, pages))
 }
 
 fn main() {
