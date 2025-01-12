@@ -1,7 +1,7 @@
 use raoc2024::run;
 
 type XMAS = u8;
-const DEBUG: bool = true;
+const DEBUG: bool = false;
 
 const DIRS: [(i32, i32); 8] = [
     (1, 0),
@@ -41,6 +41,9 @@ fn add_dir(i: usize, v: i32) -> usize {
 }
 
 fn check_dir(dat: &[Vec<XMAS>], &(i, j): &(usize, usize), &dir: &(i32, i32)) -> bool {
+    if (i as i32) + dir.0 * 3 < 0 || (j as i32) + dir.1 * 3 < 0 {
+        return false;
+    }
     for dist in 0..=3 {
         if let Some(&n) = dat
             .get(add_dir(i, dir.0 * dist))
@@ -57,7 +60,9 @@ fn check_dir(dat: &[Vec<XMAS>], &(i, j): &(usize, usize), &dir: &(i32, i32)) -> 
             return false;
         }
     }
-    eprintln!("found at {i},{j} dir {dir:?}");
+    if DEBUG {
+        eprintln!("found at {i},{j} dir {dir:?}");
+    }
     true
 }
 
