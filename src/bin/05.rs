@@ -37,7 +37,7 @@ fn is_valid(rules: &HashMap<u32, HashSet<u32>>, update: &[u32]) -> bool {
     }
     true
 }
-fn get_middle_page(update: &Vec<u32>) -> u32 {
+fn get_middle_page(update: &[u32]) -> u32 {
     update[update.len() / 2]
 }
 
@@ -50,13 +50,18 @@ fn part1(s: &str) {
     let ans: u32 = updates
         .iter()
         .filter(|pages| is_valid(&rules, pages))
-        .map(get_middle_page)
+        .map(|ps| get_middle_page(ps))
         .sum();
     println!("{ans}");
 }
 
 fn part2(s: &str) {
-    println!("part 2");
+    let mut lines = s.lines();
+    let rules = load_rules(&mut lines);
+    let sources: Vec<Vec<u32>> = lines
+        .map(|l| l.split(",").map(|n| n.parse().unwrap()).collect())
+        .collect();
+    // .filter(|pages| !is_valid(&rules, pages))
 }
 
 fn main() {
