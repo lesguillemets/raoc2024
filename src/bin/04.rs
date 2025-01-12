@@ -80,8 +80,29 @@ fn part1(s: &str) {
     println!("{c}");
 }
 
+const GRID_SIZE: usize = 3;
+
+fn check_grid_xmas(dat: &[Vec<XMAS>], x: usize, y: usize) -> bool {
+    let rightdown = (dat[y][x], dat[y + 1][x + 1], dat[y + 2][x + 2]);
+    let leftdown = (dat[y][x + 2], dat[y + 1][x + 1], dat[y + 2][x]);
+    (rightdown == (1, 2, 3) || rightdown == (3, 2, 1))
+        && (leftdown == (1, 2, 3) || leftdown == (3, 2, 1))
+}
+
 fn part2(s: &str) {
-    println!("part 2");
+    let dat: Vec<Vec<XMAS>> = s
+        .lines()
+        .map(|l| l.chars().map(from_char).collect())
+        .collect();
+    let mut c = 0;
+    for y in 0..dat.len() + 1 - GRID_SIZE {
+        for x in 0..dat[0].len() + 1 - GRID_SIZE {
+            if check_grid_xmas(&dat, x, y) {
+                c += 1;
+            }
+        }
+    }
+    println!("{c}")
 }
 
 fn main() {
