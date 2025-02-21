@@ -108,38 +108,53 @@ impl World {
         }
     }
     fn step(&mut self) -> Option<Loc> {
+        let (mut newx, mut newy) = self.guard.loc();
         match self.guard.dir {
             Dir::Up => {
-                self.guard.y = self.guard.y.checked_sub(1)?;
-                Some(self.guard.loc())
+                newy = self.guard.y.checked_sub(1)?;
             }
             Dir::Right => {
-                self.guard.x += 1;
-                if self.guard.x < self.field[0].len() {
-                    Some(self.guard.loc())
-                } else {
-                    None
+                newx = self.guard.x + 1;
+                if newx >= self.field[0].len() {
+                    // out of bounds
+                    return None;
                 }
             }
             Dir::Down => {
-                self.guard.y += 1;
-                if self.guard.y < self.field.len() {
-                    Some(self.guard.loc())
-                } else {
-                    None
+                newy = self.guard.y + 1;
+                if newy >= self.field.len() {
+                    // out of bounds
+                    return None;
                 }
             }
             Dir::Left => {
-                self.guard.x = self.guard.x.checked_sub(1)?;
-                Some(self.guard.loc())
+                newx = self.guard.x.checked_sub(1)?;
             }
         }
+        // Ok, start moving
+        if self.field.at(&(newx, newy)) == &Point::Obstacle {
+            self.guard.dir = self.guard.dir.turn();
+        } else {
+            self.field[newy][newx] = Point::Visited;
+            self.guard.x = newx;
+            self.guard.y = newy;
+        }
+        Some(self.guard.loc())
     }
 }
 
 fn part1(s: &str) {
-    let w = World::from_str(s);
-    println!("part 1, {w:?}");
+    let mut w = World::from_str(s);
+    while let Some(l) = w.step() {
+        println!("{l:?}");
+    }
+    let ans: usize = w
+        .field
+        .iter()
+        .map(|l| l.iter().filter(|&c| *c == Point::Visited).count())
+        .sum();
+
+    println!("part 1, {ans:?}");
 }
 
 fn part2(s: &str) {
